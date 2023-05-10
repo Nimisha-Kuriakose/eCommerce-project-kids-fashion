@@ -1,0 +1,241 @@
+<section class="page-add">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="page-breadcrumb">
+                    <h2>{{product.category}}<span>.</span></h2>
+                    <a href="#">Home</a>
+                    <a href="/shop">Products</a>
+                    <a class="active" href="#">{{product.category}}</a>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <img src="" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Page Section Beign -->
+<section class="product-page">
+    <div class="container">
+        <div class="product-control">
+            <a href="#">Previous</a>
+            <a href="#">Next</a>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product-slider owl-carousel">
+                    <div class="product-img">
+                        <figure>
+                            {{!-- <img src="{{product.images.[0]}}" alt=""> --}}
+                            <img src="{{product.images.[0]}}" id="main_product_image"
+                                data-zoom-image='{{product.images.[0]}}' class="img-fluid" alt="image of product">
+                            <div class="p-status">new</div>
+                        </figure>                        
+                    </div>                 
+                </div>
+                 <div style="width: 30vh;" class="mySlides mt-4">
+                    <ul style="list-style-type: none; display: flex; flex-direction: row;" class="col-sm-12">
+                        {{#each product.images}}
+                        {{#unless @first}}
+                        <li class="col-sm-12">
+                            <a href="{{this}}" data-fancybox="product-gallery">
+                            <img src="{{this}}" data-zoom-image="{{this}}" class="img-fluid " alt="image of product">
+                            </a>
+                        </li>
+                        {{/unless}}
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="product-content">
+                    <h2>{{product.name}}</h2>
+                    <div class="pc-meta">
+                        <h5>₹{{product.price}}.00</h5>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                    </div>
+                    <p>{{product.description}}</p>
+                    <ul class="tags">
+                        <li><span>Category :</span> {{product.category}}</li>
+                        <li><span>Tags :</span> {{product.category}}, elegant, cool</li>
+                    </ul>
+                   <a onclick="addToCart('{{product._id}}')" class="primary-btn pc-btn">Add to cart</a>
+                    {{#if userName}}
+                        <a onclick="addWishlist('{{product._id}}')" class="primary-btn pc-btn mx-4">Add to Wishlist</a>
+                        {{else}}
+                        <a href="/login" class="primary-btn pc-btn mx-4">Add to Wishlist</a>
+                        {{/if}}
+                  
+                        
+                           
+                    <ul class="p-info">
+                        <li>Product Information</li>
+                        <li>Reviews</li>
+                        <li>Product Care</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Product Page Section End -->
+
+<!-- Related Product Section Begin -->
+    <section class="related-product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="section-title">
+                        <h2>Related Products</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+               <div class="col-lg-3 col-sm-6">
+                    <div class="single-product-item">
+                        <figure>
+                            <a href="#"><img src="https://cdn.shopify.com/s/files/1/0631/1798/3913/products/IMG_2056_1_1200x1800.jpg?v=1676567689"></a>
+                            <div class="p-status">new</div>
+                        </figure>
+                        <div class="product-text">
+                            <h6>Frock</h6>
+                            <p>₹999.00</p>
+                            {{!-- {{/each}} --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-product-item">
+                        <figure>
+                            <a href="#"><img src="https://cdn.shopify.com/s/files/1/0631/1798/3913/products/IMG_2333_2_1200x1800.jpg?v=1676617162"></a>
+                            <div class="p-status">new</div>
+                        </figure>
+                        <div class="product-text">
+                            <h6>Frock</h6>
+                            <p>₹799.00</p>
+                            {{!-- {{/each}} --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-product-item">
+                        <figure>
+                            <a href="#"><img src="https://cdn.shopify.com/s/files/1/0631/1798/3913/products/IMG_2482_1_1200x1800.jpg?v=1676568058"></a>
+                            <div class="p-status">new</div>
+                        </figure>
+                        <div class="product-text">
+                            <h6>Frock</h6>
+                            <p>₹2509.00</p>
+                            {{!-- {{/each}} --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-product-item">
+                        <figure>
+                            <a href="#"><img src="https://cdn.shopify.com/s/files/1/0631/1798/3913/products/IMG_2201_1200x1800.jpg?v=1676567019"></a>
+                            <div class="p-status">new</div>
+                        </figure>
+                        <div class="product-text">
+                            <h6>Frock</h6>
+                            <p>₹599.00</p>
+                            {{!-- {{/each}} --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- Related Product Section End -->  
+
+
+{{!-- axios AddToCart and AddToWishlist --}}
+<script>
+    function addToCart(productId) {
+        console.log("apicall")
+        axios.get(`/addToCart/${productId}`).then((response) => {
+            if (response.status) {
+                Toastify({
+                    text: `${response.data.message}`,
+                    duration: 3000,
+                    className: "info",
+                    gravity: "bottom",
+                    position: "center",
+                    style: {
+                        background: "linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%)",
+                    }
+                }).showToast(); 
+            }
+        }).catch((err) => {
+            Toastify({
+                text: "product is not added to cart",
+                duration: 3000,
+                className: "info",
+                gravity: "bottom",
+                position: "center",
+                style: {
+                    background: "linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%)",
+                }
+            }).showToast();
+        })
+    }
+   function addWishlist(productId) {
+  axios.get(`/addToWishlist/${productId}`).then((response) => {
+    if (response.status) {
+      Toastify({
+        text: `${response.data.message}`,
+        duration: 3000,
+        className: "info",
+        gravity: "bottom",
+        position: "center",
+        style: {
+          background: "linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%)",
+        }
+      }).showToast();
+
+      
+    }
+        }).catch((err) => {
+            Toastify({
+                text: "product is not added to wishlis",
+                duration: 3000,
+                className: "info",
+                gravity: "bottom",
+                position: "center",
+                style: {
+                    background: "linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%)",
+                }
+            }).showToast();
+        })
+    }
+</script>
+
+
+
+
+
+{{!-- elevate zoom --}}
+<script>
+    //function changeImage(element) {
+    let main_prodcut_image = document.getElementById('main_product_image');
+    //main_prodcut_image.src = element.src;
+    $("#main_product_image").data('zoom-image', main_prodcut_image.src).elevateZoom({
+       responsive: true, 
+       zoomWindowWidth: 300, 
+       zoomWindowHeight:300
+    });
+    //$("#main_product_image").elevateZoom({
+    //    responsive: true
+    //});
+</script>
