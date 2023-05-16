@@ -41,8 +41,33 @@ module.exports = {
             req.session.adminName = false;
             res.redirect('/admin');
         },
-        adminPanel: (req, res) => {
-            res.render('admin/adminPanel', {admin: true, adminName: req.session.adminName});
+        //Admin Panel
+        adminPanel: async (req, res) => {
+
+        const jan = await adminHelpers.getMonthCount(1,2023)
+        const feb = await adminHelpers.getMonthCount(2,2023)
+        const mar = await adminHelpers.getMonthCount(3,2023)
+        const apr = await adminHelpers.getMonthCount(4,2023)
+        const may = await adminHelpers.getMonthCount(5,2023)
+        const jun = await adminHelpers.getMonthCount(6,2023)
+        const userCount =await adminHelpers.getUsersCount()
+        const total = await adminHelpers.getLastMonthTotal()
+        console.log('total check')
+        console.log(total)
+        const totalOrdersPlaced = await productHelpers.totalOrdersPlaced()
+        let totalEarnings = 0;
+        totalEarnings = await adminHelpers.getOrderTotalPrice();
+        const deliveredCounts = await adminHelpers.getAllDeliveredOrdersCount();
+        const placedCounts = await adminHelpers.getAllPlacedOrdersCount();
+        const cancelledCounts = await adminHelpers.getAllCanceldOrdersCount();
+        const returnCounts = await adminHelpers.getAllReturnOrdersCount();
+        // const topProducts = await adminHelpers.getTopProduct();
+        res.render('admin/adminpanel', {admin: true, adminName: req.session.adminName, deliveredCounts , placedCounts, cancelledCounts, returnCounts, userCount, totalOrdersPlaced, total, totalEarnings, jan,feb,mar,apr,may,jun});
+    },
+
+        adminregister: (req, res) => {
+            res.render('/register');
+            //req.session.emailExist = false;
         },
         adminUserManagement: async (req, res) => {
             const adminName = req.session.adminName;
@@ -93,9 +118,13 @@ adminBlockUser: (req, res) => {
 //Admin Product CRUD
 adminProduct: async (req, res) => {
     const adminName = req.session.adminName;
-    const productData = await productHelpers.getProducts();
-    res.render('admin/adminproduct', {admin: true, adminName, productData});
-},
+
+        //pagination
+    const totalPages = await productHelpers.totalPages();
+    const currentPage = req.query.page || 1;
+    const productData = await productHelpers.getProductsAdmin(currentPage);
+    res.render('admin/adminProduct', { admin: true, adminName, productData ,totalPages,currentPage});
+    },
 adminAddProduct: (req, res) => {
     const adminName = req.session.adminName;
     categoryHelpers.getCategory().then((category) => {
@@ -105,6 +134,13 @@ adminAddProduct: (req, res) => {
     
     
 },
+adminSearchProduct: async (req, res) => {
+    const adminName = req.session.adminName;
+
+    const product = await adminHelpers.adminSearchProduct(req.body.name);
+
+    res.render('admin/adminProduct', { admin: true, adminName, product })
+    },
 
 adminAddProductPost: (req, res) => {
     productHelpers.addProducts(req.body).then(async(id)=>{
@@ -169,13 +205,16 @@ addCategory:(req, res) => {
 
 deleteCategory: (req, res) => {
     const category = req.params.id;
+    const cateName = req.params.name;
     console.log(category);
-    categoryHelpers.deleteCategory(category).then(() => {
+    categoryHelpers.deleteCategory(category, cateName).then(() => {
+
         res.redirect('/admin/adminCategory');
     }).catch((err) => {
         console.log(err);
-    })
-},
+       })
+    },
+
 // Orders
 adminOrder: (req, res) => {
     const adminName = req.session.adminName;
@@ -196,6 +235,59 @@ adminOrderStatus:(req, res) => {
     res.redirect('back');
    })
 },
+
+
+   // Admin SalesReport
+   adminSalesReport: async (req, res) => {
+    const deliveredOrders = await adminHelpers.getAllDeliveredOrders();
+
+    let totalEarnings = 0;
+    totalEarnings = await adminHelpers.getOrderTotalPrice();
+
+    deliveredOrders.forEach(eachOrder => {
+        eachOrder.productCount = eachOrder.products.length;
+
+        // date formatting
+        const newDate = new Date(eachOrder.date);
+        const year = newDate.getFullYear();
+        const month = newDate.getMonth() + 1;
+        const day = newDate.getDate();
+        const formattedDate = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+        eachOrder.date = formattedDate;
+      });
+      res.render('admin/adminSalesReport', {admin: true, adminName:req.session.adminName,  deliveredOrders, totalEarnings})
+},
+
+adminSalesReportFilter:(req, res) => {
+    req.redirect('/admin/adminSalesReport');
+},
+
+adminSalesReportFilterPost:(req, res) => {
+    adminHelpers.filterDate(req.body.date).then((filteredOrders) => {
+
+        let totalEarnings = 0;
+        if(filteredOrders.length >=1 ){
+            filteredOrders.forEach(eachOrder => {
+                eachOrder.productCount = eachOrder.item.length;
+                totalEarnings += eachOrder.total;
+
+                // date formatting
+                const newDate = new Date(eachOrder.date);
+                const year = newDate.getFullYear();
+                const month = newDate.getMonth() + 1;
+                const day = newDate.getDate();
+                const formattedDate = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+                eachOrder.date = formattedDate;
+            });
+            
+        }else{
+
+            filteredOrders = false;
+        }
+        res.render('admin/adminSalesReport', {admin: true, adminName: req.session.adminName, deliveredOrders:filteredOrders, totalEarnings});
+    })
+},
+
 
     
     }

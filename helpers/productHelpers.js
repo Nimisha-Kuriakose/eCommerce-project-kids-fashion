@@ -14,17 +14,41 @@ module.exports = {
             })
         })
     },
-
-    getProducts:() => {
+    getProducts:(currentPage) => {
         return new Promise (async (resolve, reject) => {
-            const productData = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray();
+            currentPage = parseInt(currentPage);
+            console.log('currentPage');
+            console.log(currentPage);
+            const limit = 8;
+            const skip = (currentPage-1)*limit;
+            const productData = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skip).limit(limit).toArray();
+            if(productData){
+                console.log("productData");
+                console.log(productData);
+                resolve(productData);
+            }else{
+                resolve("No data to show")
+            }
+        })
+      },
+
+    getProductsAdmin:(currentPage) => {
+        return new Promise (async (resolve, reject) => {
+          currentPage = parseInt(currentPage);
+            console.log('currentPage');
+            console.log(currentPage);
+            const limit = 8;
+            const skip = (currentPage-1)*limit;
+            const productData = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skip).limit(limit).toArray();
+            // const productData = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray();
             if(productData){
                 resolve(productData);
             }else{
                 resolve("No data to show")
             }
-        })
-    },
+        })
+      },
+    
 
     getSingleProduct: (productId) => {
         return new Promise (async (resolve, reject) =>{
@@ -110,6 +134,29 @@ module.exports = {
             })
         })
     },
+     totalPages:()=> {
+        return new Promise(async (resolve, reject) => {
+            const totalCount = await db.get().collection(collection.PRODUCT_COLLECTION).countDocuments({});
+            resolve(totalCount);
+        })
+    },
+
+    totalOrdersPlaced:() => {
+        return new Promise (async (resolve, reject) => {
+            try{
+                const orderPlacedCount = await db.get().collection(collection.ORDER_COLLECTION).countDocuments({});
+                resolve(orderPlacedCount);
+            }catch{
+                resolve(0)
+            }
+        })
+    },
+    totalPagesOfOrder:()=>{
+        return new Promise(async (resolve, reject) => {
+            const totalPages = await db.get().collection(collection.ORDER_COLLECTION).countDocuments({});
+            resolve(totalPages);
+        })
+      },
 
     editProductImage: (id, imgUrls) => {
         return new Promise ((resolve , reject) => {

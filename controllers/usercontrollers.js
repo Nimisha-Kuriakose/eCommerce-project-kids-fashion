@@ -153,48 +153,38 @@ productPage: (req, res) => {
 },
 shopPage: async (req, res) => {
   const userName = req.session.userName;
+  const filteredProducts = req.session.filteredProduct;
+  const minPrice = req.session.minPrice;
+  const maxPrice = req.session.maxPrice;
   const sortedProducts = req.session.sortedProduct;
-  console.log(
-      sortedProducts + "sssssssssssssssssssssssssssssssssssssssssssss"
-  );
   const categories = await productHelpers.getListedCategory();
-  console.log("categories");
 
-  if (sortedProducts) {
-      console.log("insideSortedProducts");
-      console.log(sortedProducts);
-      console.log(categories);
-      console.log(userName);
-      res.render("user/shop", {
-          user: true,
-          categories,
-          userName,
-          sortedProducts,
-      });
+  //pagination
+  const totalPages = await productHelpers.totalPages();
+  const currentPage = req.query.page || 1;
 
-      req.session.sortedProduct = false;
+  if (filteredProducts) {
+    res.render("user/shop", { user: true, categories, userName, filteredProducts, minPrice, maxPrice });
+    req.session.filteredProduct = false;
+  } else if (sortedProducts) {
+    res.render("user/shop", { user: true, categories, userName, sortedProducts, minPrice, maxPrice });
+    req.session.sortedProduct = false;
   } else {
-      console.log("insideNOrmalproduct");
-      req.session.category = false;
-      req.session.sortedProduct = false;
-      req.session.maxPrice = false;
-      req.session.minPrice = false;
-      productHelpers
-          .getProducts()
-          .then((products) => {
-              console.log("insideNOrmalproduct");
-              res.render("user/shop", {
-                  user: true,
-                  categories,
-                  userName,
-                  products,
-              });
-          })
-          .catch((err) => {
-              console.log(err);
-          });
+    req.session.category = false;
+    req.session.filteredProduct = false;
+    req.session.sortedProduct = false;
+    req.session.maxPrice = false;
+    req.session.minPrice = false;
+    productHelpers.getProducts(currentPage).then((products) => {
+      console.log("insideproducts");
+      console.log(products);
+      res.render("user/shop", { user: true, categories, userName, products, currentPage, totalPages });
+    })
+      .catch((err) => {
+        console.log(err);
+      });
     }
-},
+  },
 //user cart
 cart: async (req, res) => {
   const userName = req.session.user.name;

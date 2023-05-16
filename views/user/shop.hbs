@@ -2,64 +2,53 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
 
 <section class="page-add">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="page-breadcrumb">
-                        <h2>Products<span>.</span></h2>
-                        <a href="/">Home</a>
-                        <a href="/shop" class="active">Products</a>
-                    </div>
-                    <div class="page-breadcrumb">
-                        <h5>Category</h5>
-                        <div class="page-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="page-breadcrumb">
+                    <h2>Products<span>.</span></h2>
+                    <a href="/">Home</a>
+                    <a href="/shop" class="active">Products</a>
+                </div>
+                <div class="page-breadcrumb">
+                    <h5>Category</h5>
+                    <div class="page-breadcrumbs">
                         <ul class="container">
                             {{#each categories}}
-                                <li><a href="/category/{{this.name}}">{{this.name}}</a></li>
+                            <li><a href="/category/{{this.name}}">{{this.name}}</a></li>
                             {{/each}}
                         </ul>
-                        </div>
-                        
-                      
                     </div>
+
+
                 </div>
-                <div class="col-lg-8">
-    <a href="/shop">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4DjB8vQ5PzG8RW2pb0XfuNr6AgYr0HQ7fd-tNhSKWyfPzsprVr8ONFaA-qH9T-HywPZ0&usqp=CAU" alt=""style="width: 550px; height: 350px;">
-    </a>
-</div>
-
             </div>
-        </div>
-    </section>
-    <!-- Page Add Section End -->
+            <div class="col-lg-8">
+                <a href="/shop">
+                    <img src="https://img.freepik.com/free-vector/hand-drawn-kids-toys-sale-banner_23-2149651210.jpg" alt=""
+                        width="1100" height="400">
+                </a>
+            </div>
 
-    <!-- Categories Page Section Begin -->
-    <section class="categories-page spad">
-        <div class="container">
-            <div class="categories-controls">
-                <div class="row">
-                    {{!-- <div class="col-lg-12">
-                        <div class="categories-filter">
-                            <div class="cf-left">
-                                <form action="#">
-                                    <select class="sort">
-                                        <option value="">Sort by</option>
-                                        <option value="">Orders</option>
-                                        <option value="">Newest</option>
-                                        <option value="">Price</option>
-                                    </select>
-                                </form>
-                            </div>
-                            <div class="cf-right">
-                                <span>20 Products</span>
-                                <a href="#">2</a>
-                                <a href="#" class="active">4</a>
-                                <a href="#">6</a>
-                            </div>
-                        </div>
-                    </div> --}}
-                     <div class="col-lg-3">
+        </div>
+    </div>
+</section>
+<!-- Page Add Section End -->
+
+
+
+{{!-- pagination --}}
+<input id="totalCount" hidden value="{{totalPages}}">
+<input id="currentPages" hidden value="{{currentPage}}">
+
+
+<!-- Categories Page Section Begin -->
+<section class="categories-page spad">
+    <div class="container">
+        <div class="categories-controls">
+            <div class="row">
+               
+                <div class="col-lg-3">
                     <div class="categories-filter">
                         <div class="col-md-12">
                             <label for="range">Price range:</label>
@@ -83,37 +72,34 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="cf-left mt-3">
-                                    {{!-- <select class="sort"> --}}
-                                        {{!-- <option value="" >Sort by</option> --}}
-                                        <a href="" class="btn btn-dark" onclick="sortPrice(1)">Low to High</a>
-                                        <a href="" class="btn btn-dark" onclick="sortPrice(-1)">High to Low</a>
-                                    
-                               
-                                        {{!-- <option value="" onclick="sortPrice(1)">Low to High</option>
-                                        <option value="" onclick="sortPrice(-1)">High to Low</option> --}}
-                                    {{!-- </select> --}}
-                            </div>
-                            
+                        <div class="cf-left mt-3">
+                            {{!-- <select class="sort"> --}}
+                                {{!-- <option value="">Sort by</option> --}}
+                                <a href="" class="btn btn-dark" onclick="sortPrice(1)">Low to High</a>
+                                <a href="" class="btn btn-dark" onclick="sortPrice(-1)">High to Low</a>
+
+
+                        </div>
+
                     </div>
                 </div>
-<div class="main">
-  <!-- Another variation with a button -->
-  <form action="/user/userSearchProduct" method="post">
-    <div style="padding-left: 494px;" class="input-group col-*">
-      <input type="search" name="name" class="form-control form-control-sm" placeholder="Search">
-      <div class="input-group-append">
-        <button class="btn btn-secondary" type="submit">
-          <i class="fa fa-search"></i>
-        </button>
-      </div>
-    </div>
-  </form>
-</div>
+                <div class="main">
+                    <!-- Another variation with a button -->
+                    <form action="/user/userSearchProduct" method="post">
+                        <div style="padding-left: 494px;" class="input-group col-*">
+                            <input type="search" name="name" class="form-control form-control-sm" placeholder="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            </div>
-          <div class="container">
+        </div>
+    </div>
+    <div class="container">
         <div class="row">
             {{#if products}}
             {{#each products}}
@@ -136,7 +122,7 @@
                 </div>
             </div>
             {{/each}}
-             {{else if product}}
+            {{else if product}}
             {{#each product}}
             <div class="col-lg-3 col-md-6">
                 <div class="single-product-item">
@@ -214,16 +200,17 @@
             {{/if}}
 
 
-           
-        
-           
+
+
+
         </div>
         <div class="col d-flex justify-content-center pagination text-dark">
         </div>
-        
-        
+
+
     </div>
-                {{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script> --}}
+    {{!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script> --}}
 
 </section>
 
@@ -288,6 +275,30 @@
             .catch(() => {
                 location.href = '/shop';
             });
-    }
+    }
 
+</script>
+
+
+{{!-- Pagination --}}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const totalCountInput = document.getElementById('totalCount');
+        const totalCount = Number(totalCountInput.value);
+
+        const currentPageInput = document.getElementById('currentPages');
+        const currentPage = Number(currentPageInput.value);
+        const totalPages = Math.ceil(totalCount / 8);
+
+        let page = currentPage || 1;
+        const paginationElement = document.querySelector('.pagination')
+
+        let pageLinks = '';
+        console.log(currentPage);
+        console.log(totalPages);
+        for (let i = 1; i <= totalPages; i++) {
+            pageLinks += `<ul style="list-style-type: none;"><li class="page-item${i === page ? ' active' : ''}"><a class="page-link" style="color: black;" href="?page=${i}">${i}</a></li></ul>`;
+        }
+        paginationElement.innerHTML = pageLinks;
+    });
 </script>

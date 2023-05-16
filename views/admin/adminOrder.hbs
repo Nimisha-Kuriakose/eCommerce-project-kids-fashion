@@ -9,42 +9,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    {{!-- <table class="table table-hover table-striped tm-table-striped-even mt-3">
-                        <thead>
-                            <tr class="tm-bg-gray">
-                                <th scope="col">Product Name</th>
-                                <th scope="col">customer</th>
-                                <th scope="col" class="text-center">Mobile</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Status</th>
-                                <th scope="col" class="text-center">Image</th>
-                                <th scope="col">Edit Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#if adminOrder}}
-                            {{#each adminOrder}}
-                            {{#each adminOrder.order as |order|}}
-                            {{#each order.item as |item|}}
-                            <tr>
-                                <td class="tm-product-name">{{item.product.name}}</td>
-                                <td class="text-center">{{order.shippingAddress.name}}</td>
-                                <td class="text-center">{{order.shippingAddress.phone}}</td>
-                                <td>{{order.total}}</td>
-                                <td>{{order.status}}</td>
-                                <td><img src="{{item.product.images.[0]}}" alt="" style="width: 60px; height: 60px;">
-                                </td>
-                                <td><a data-toggle="modal" data-target="#edit{{this._id}}"><i
-                                            class="fas fa-edit"></i></a></td>
-                                <td><a class=" btn btn-primary" data-toggle="modal" data-target="#delete{{this._id}}"><i
-                                            class="fas fa-trash-alt tm-trash-icon"></i></a></td>
-                            </tr>
-                            {{/each}}
-                            {{/each}}
-                            {{/each}}
-                            {{/if}}
-                        </tbody>
-                    </table> --}}
+                   
                     <!-- orders.hbs -->
 
 
@@ -101,13 +66,7 @@
                                             <form class="text-dark" action="/admin/adminOrderStatus/{{_id}}"
                                                 method="post">
                                                 <div class="form-group">
-                                                   {{!-- <select name="" id=""><label for="name" class="col-form-label">Status: 
-                                                        <option value="{{this.name}}">{{status}}</option> --}}
-                                                        
-                                                        {{!-- <input type="text" name="status" value="{{status}}"
-                                                        style="color: black;" class="border" id="name"> --}}
-                                                    {{!-- </label>
-                                                    </select> --}}
+                                                  
 
                                                 <select class="custom-select tm-select-accounts" id="name" name="status">
                                                   <option value="placed">placed</option>
@@ -116,7 +75,7 @@
                                                   <option value="Canceled" >Cancelled</option>
                                                 </select>
                                                     
-                                                    {{!-- <input hidden name="userId" value="{{this.userId}}"> --}}
+                                                   
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"

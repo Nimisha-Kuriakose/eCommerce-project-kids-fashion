@@ -1,0 +1,75 @@
+<style>
+    * {
+    box-sizing: border-box;
+}
+form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: #ededed;
+    padding: 25px;
+    .form-control {
+        width: 100%;
+        margin-bottom: 15px;
+        input {
+            width: 100%;
+            height: 30px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            color: white;
+            background: rgb(61, 53, 113);
+            border: 0;
+            outline: none;
+            cursor: pointer;
+        }
+    }
+}
+#errors {
+    ul {
+        li {
+            color: red;
+            margin-bottom: 5px;
+        }
+    }
+}
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <form action="/Register" method="post">
+    <div class="form-control">
+        <label for="username">Name</label>
+        <input type="text" id="username" name="username">
+    </div>
+    <div class="form-control">
+        <label for="useremail">Email</label>
+        <input type="email" id="useremail" name="useremail">
+    </div>
+    <div class="form-control">
+        <label for="userpassword1">Password</label>
+        <input type="password" id="userpassword1" name="userpassword1">
+    </div>
+    <div class="form-control">
+        <label for="userpassword2">Confirm Password</label>
+        <input type="password" id="userpassword2" name="userpassword2">
+    </div>
+    <div class="form-control">
+        <button type="submit">Sign Up</button>
+    </div>
+    <div id="errors">
+        <ul></ul>
+    </div>
+</form> 
+</body>
+</html>

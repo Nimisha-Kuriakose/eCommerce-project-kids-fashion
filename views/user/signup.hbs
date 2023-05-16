@@ -35,10 +35,33 @@
                   <label class="text-danger">{{emailExist}}</label>
                   {{/if}}
 
-                <div class="form-outline mb-4">
+                {{!-- <div class="form-outline mb-4">
                   <input type="password" id="form3Example4cg" class="form-control form-control-lg" name="password"/>
                   <label class="form-label" for="form3Example4cg">Password</label>
-                </div>
+                </div> --}}
+                <div class="form-outline mb-4">
+    <input type="password" id="form3Example4cg" class="form-control form-control-lg" name="password" />
+    <label class="form-label" for="form3Example4cg">Password</label>
+</div>
+
+<div class="form-outline mb-4">
+    <input type="password" id="form3Example4cg-confirm" class="form-control form-control-lg" name="confirm_password" />
+    <label class="form-label" for="form3Example4cg-confirm">Confirm Password</label>
+</div>
+
+<script>
+    const passwordField = document.querySelector('[name="password"]');
+    const confirmPasswordField = document.querySelector('[name="confirm_password"]');
+
+    confirmPasswordField.addEventListener('input', () => {
+        if (confirmPasswordField.value !== passwordField.value) {
+            confirmPasswordField.setCustomValidity('Passwords do not match');
+        } else {
+            confirmPasswordField.setCustomValidity('');
+        }
+    });
+</script>
+
                   {{#if errMsg}}
                   <label class="text-danger">{{errMsg}}</label>
                   {{/if}}
