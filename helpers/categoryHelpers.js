@@ -3,39 +3,38 @@ const collection = require('../config/collections');
 const objectId = require('mongodb-legacy').ObjectId;
 
 module.exports = {
-    // addCategory:(detailes) => {
-    //     return new Promise (async (resolve, reject) => {
-    //             const Category = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({name: detailes.name})
-    //             if(Category){
-    //                 resolve(false)
-    //             }else{
-    //                 detailes.listed = true;
-    //                 db.get().collection(collection.CATEGORY_COLLECTION).insertOne(detailes).then((response) => {
-    //                     resolve(response.insertedId);
-    //                 })
-    //             }
-    //     })
-    // },
-
     addCategory: (details) => {
         return new Promise(async (resolve, reject) => {
-          const name =details.name
-          const categoryName = details.name.toLowerCase(); // Convert category name to lowercase
-          const category = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ name: { $regex: new RegExp("^" + categoryName + "$", "i") } }); // Use case-insensitive regex to find category
-          if (category) {
-            resolve(false);
-          } else  {
-            details.name=name
-            details.name = categoryName; // Save lowercase category name
-            details.listed = true;
-            db.get().collection(collection.CATEGORY_COLLECTION).insertOne(details).then((response) => {
-              resolve(response.insertedId);
-              
-            });
-          }
-        
-        });
-      },
+            const name = details.name;
+            const categoryName = details.name.toLowerCase();
+            const Category = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ name: { $regex: new RegExp("^" + categoryName + "$", "i") } });
+            if (Category) {
+                resolve({ status: false });
+            } else {
+                details.name = name;
+                details.listed = true;
+                db.get().collection(collection.CATEGORY_COLLECTION).insertOne(details).then((response) => {
+                    db.get().collection(collection.PRODUCT_COLLECTION).updateMany(
+                        {
+                            category: details.name
+                        },
+                        {
+                            $set: {
+                                listed: true
+                            }
+                        }
+                    );
+                    resolve({ status: true, insertedId: response.insertedId });
+                }).catch((error) => {
+                    reject(error);
+                });
+            }
+        });
+    },
+    
+   
+    
+    
       
     getCategory: () => {
         return new Promise (async (resolve, reject) => {

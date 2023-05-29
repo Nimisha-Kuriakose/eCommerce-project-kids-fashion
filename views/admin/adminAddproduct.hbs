@@ -25,6 +25,17 @@
                                
                         </div>
                         <div class="input-group mb-3">
+                            <label for="productid" class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">ProductId
+                              
+                  
+                            </label>
+                            <input id="productid" name="productid" type="productid"
+                                class="form-control validate col-xl-9 col-lg-8 col-md-7 col-sm-7" >
+
+                                  <span id="stockError" class="text-danger error-message"></span>
+                                 
+                        </div>
+                        <div class="input-group mb-3">
                             <label for="description"
                                 class="col-xl-4 col-lg-4 col-md-4 col-sm-5 mb-2">Description</label>
                                 <input id="description" name="description" type="text"
@@ -85,10 +96,7 @@
                 </div>
                 <div class="input-group mb-3">
                     <div class="ml-auto col-xl-8 col-lg-8 col-md-8 col-sm-7 pl-0">
-                         <button type="submit" class="btn btn-primary">Add
-                        </button> 
-
-                        {{!-- <button type="submit" class="btn btn-primary" onclick="showAlert()">Add</button> --}}
+                        <button type="submit" class="btn btn-primary" onclick="showNotification()">Add</button>
 
                     </div>
                 </div>
@@ -191,4 +199,17 @@ function validateForm() {
 
   return true;
 }
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function showNotification() {
+        Swal.fire({
+            title: "Product Added!",
+            text: "The product has been successfully added.",
+            icon: "success",
+            confirmButtonText: "OK"
+        });
+    }
 </script>

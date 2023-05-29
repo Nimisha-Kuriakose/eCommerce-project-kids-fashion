@@ -14,13 +14,23 @@ router.get('/logout',verifySession.verifyUserLoggedIn, userControllers.logout);
 
 // otp
 router.get('/otpverification',verifySession.ifUserLoggedIn, userControllers.otpPageRender);
-
+router.get('/resend',verifySession.ifUserLoggedIn, userControllers.otpresend);
+router.post('/smssend', userControllers.usersignup);
 router.post('/otpverification', userControllers.otpVerification);
 // user cart
 router.get('/cart/',verifySession.verifyUserLoggedIn, userControllers.cart);
 router.post('/change-product-quantity', verifySession.verifyUserLoggedIn, userControllers.changeProductQuantity);
 router.get('/addToCart/:id', verifySession.verifyUserLoggedIn, userControllers.cartPage);
 router.get('/deleteCart/:id', verifySession.verifyUserLoggedIn, userControllers.deleteCart);
+//forgot password
+router.get('/forgotPass',userControllers.forgotPass)
+
+router.post('/forgotPasswordPost', userControllers.forgotPasswordPost);
+
+
+router.post('/forgotPassOTP',userControllers.forgotPassOtpVerificaion)
+router.post('/forgotPassOtpVerificaion',verifySession.ifUserLoggedIn,userControllers.forgotPassOtpVerificaion)
+
 
 
 // User Panel
@@ -44,8 +54,8 @@ router.get('/category/:name', verifySession.verifyUserLoggedIn, userControllers.
 
 // User Orders
 router.get('/orders', verifySession.verifyUserLoggedIn, userControllers.orders);
-router.get('/cancelOrder/:id', verifySession.verifyUserLoggedIn, userControllers.cancelOrder);
-
+router.post('/cancelOrder/:id', verifySession.verifyUserLoggedIn, userControllers.cancelOrder);
+router.post('/returnOrder/:id', verifySession.verifyUserLoggedIn, userControllers.retunOrder);
 router.get('/orders/viewProduct/:id', verifySession.verifyUserLoggedIn, userControllers.viewDet);
 
 //UserProfile
@@ -69,4 +79,12 @@ router.post('/shopPriceFilter', verifySession.verifyUserLoggedIn, userController
 router.post('/shopPriceSort', verifySession.verifyUserLoggedIn, userControllers.sortPrice);
 router.post('/user/userSearchProduct', verifySession.verifyUserLoggedIn, userControllers.userSearchProduct);
 
+//paypal
+router.get('/success', verifySession.verifyUserLoggedIn, userControllers.paypalSuccess);
+router.post('/couponApply', verifySession.verifyUserLoggedIn, userControllers.couponApply);
+
+//invoice
+router.post('/setinvoice/:id',verifySession.verifyUserLoggedIn,userControllers.invoicegenerator)
+//wallet
+router.get('/wallet', verifySession.verifyUserLoggedIn, userControllers.getWallet);
 module.exports = router;

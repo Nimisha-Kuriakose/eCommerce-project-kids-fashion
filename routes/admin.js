@@ -5,14 +5,12 @@ const adminControllers = require('../controllers/admincontrollers');
 const upload = require('../utils/multer');
 const userControllers = require('../controllers/usercontrollers');
 const verifySession = require('../middleware/verifySession');
+const multer = require('../utils/multer');
 //Admin Login Logout
 router.get('/', verifySession.ifAdminLoggedIn,adminControllers.adminLogin);
 router.get('/AdminLogout', verifySession.verifyAdminLoggedIn, adminControllers.adminLogout);
 //Admin Register
-// router.get('/register', verifySession.ifAdminLoggedIn,adminControllers.adminregister);
-router.get('/register',verifySession.verifyAdminLoggedIn,adminControllers.adminregister)
-// router.post('/Register', adminControllers.adminregisterPost);
-
+router.get('/register', verifySession.ifAdminLoggedIn,adminControllers.adminregister);
 
 // Admin Panel
 router.get('/adminpanel', verifySession.verifyAdminLoggedIn, adminControllers.adminPanel);
@@ -55,7 +53,18 @@ router.post('/adminOrderStatus/:id', verifySession.verifyAdminLoggedIn, adminCon
 // Admin search
 router.post('/adminSearchProduct', verifySession.verifyAdminLoggedIn, adminControllers.adminSearchProduct);
 
-//Admin Sales Report
+// Admin Coupon
+router.get('/adminCoupon', verifySession.verifyAdminLoggedIn, adminControllers.adminCoupon);
+
+router.post('/adminAddCoupon', verifySession.verifyAdminLoggedIn, adminControllers.adminAddCoupon);
+
+router.post('/adminEditCoupon/:id', verifySession.verifyAdminLoggedIn, adminControllers.adminEditCoupon);
+
+router.get('/adminDeactivate/:id', verifySession.verifyAdminLoggedIn, adminControllers.adminDeactivate);
+
+router.get('/adminActivate/:id', verifySession.verifyAdminLoggedIn, adminControllers.adminActivate);
+
+
 // Admin Sales Report
 router.get('/adminSalesReport', verifySession.verifyAdminLoggedIn, adminControllers.adminSalesReport);
 
@@ -63,5 +72,18 @@ router.get('/adminSalesReportFilter', verifySession.verifyAdminLoggedIn, adminCo
 
 router.post('/adminSalesReportFilter', verifySession.verifyAdminLoggedIn, adminControllers.adminSalesReportFilterPost);
 
+//wallet
 
+router.get('/adminOrdersView/:id', verifySession.verifyAdminLoggedIn, adminControllers.adminOrderView);
+
+router.post('/adminRefund/:id', verifySession.verifyAdminLoggedIn, adminControllers.adminRefund);
+
+// Admin Banner
+router.get('/adminBanner', verifySession.verifyAdminLoggedIn, adminControllers.adminBanner);
+
+router.post('/adminAddBanner', verifySession.verifyAdminLoggedIn, multer.single("image", 1), adminControllers.adminAddBanner);
+
+router.post('/adminEditBanner/:id', verifySession.verifyAdminLoggedIn, multer.single("image", 1), adminControllers.adminEditBanner);
+
+router.get('/adminActivateBanner/:id', verifySession.verifyAdminLoggedIn, adminControllers.adminActivateBanner);
 module.exports = router;

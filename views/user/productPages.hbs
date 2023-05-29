@@ -66,16 +66,32 @@
                     <ul class="tags">
                         <li><span>Category :</span> {{product.category}}</li>
                         <li><span>Tags :</span> {{product.category}}, elegant, cool</li>
-                    </ul>
-                   <a onclick="addToCart('{{product._id}}')" class="primary-btn pc-btn">Add to cart</a>
-                    {{#if userName}}
-                        <a onclick="addWishlist('{{product._id}}')" class="primary-btn pc-btn mx-4">Add to Wishlist</a>
+                         {{#if (gte product.stock 1)}}
+                        <li><span>Product in Stock :</span> {{product.stock}}</li>
                         {{else}}
-                        <a href="/login" class="primary-btn pc-btn mx-4">Add to Wishlist</a>
+                        <li><span class="text-danger mt-5" style="font-weight: bold;">Product out of stock</span></li>
                         {{/if}}
+                    </ul>
+                    <div class="input-group mb-3">
+                        {{#if userName}}
+                        {{#if (eq product.stock 0) }}
+                        <a class="primary-btn pc-btn mx-4 text-danger mb-4"
+                            onclick="this.blur(); Toastify({text: 'This product is currently out of stock', duration: 2000, close: true, gravity: 'top', style: {background: 'linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%)'}, position: 'center'}).showToast();">Out
+                            of Stock</a>
+                        {{else}}
+                        <a onclick="addToCart('{{product._id}}')" class="primary-btn pc-btn mx-4 mb-4">Add to cart</a>
+                        {{/if}}
+
+                        {{else}}
+                        <a href="/login" class="primary-btn pc-btn mx-4 mb-4">Add to cart</a>
+                        {{/if}}
+
                   
-                        
-                           
+                    {{#if userName}}
+                        <a onclick="addWishlist('{{product._id}}')" class="primary-btn pc-btn mx-4 mb-4">Add to Wishlist</a>
+                        {{else}}
+                        <a href="/login" class="primary-btn pc-btn mx-4 mb-4">Add to Wishlist</a>
+                        {{/if}}
                     <ul class="p-info">
                         <li>Product Information</li>
                         <li>Reviews</li>
@@ -84,6 +100,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
 <!-- Product Page Section End -->

@@ -1,34 +1,59 @@
 module.exports=
 {
-    verifyUserLoggedIn:(req,res,next)=>
-    {
-        if(req.session.userLoggedIn){
+    verifyUserLoggedIn: (req, res, next) => {
+        try {
+          if (req.session.userLoggedIn) {
             next();
-        }else{
+          } else {
             res.redirect('/login');
+          }
+        } catch (error) {
+          // Handle the error
+          console.log(error);
+          res.status(500).send('Internal Server Error');
         }
-    },
-    ifUserLoggedIn: (req, res, next) => {
-        if(req.session.userLoggedIn){
+      },
+      
+      ifUserLoggedIn: (req, res, next) => {
+        try {
+          if (req.session.userLoggedIn) {
             res.redirect('/');
-        }
-        else{
+          } else {
             next();
+          }
+        } catch (error) {
+          // Handle the exception here
+          console.error('Error in ifUserLoggedIn middleware:', error);
+          next(error); // Pass the error to the error-handling middleware
+        }
+      },
+      
+      verifyAdminLoggedIn: (req, res, next) => {
+        try {
+            if (req.session.adminLoggedIn) {
+                next();
+            } else {
+                res.redirect('/admin');
+            }
+        } catch (error) {
+            // Handle the exception here
+            console.error('An error occurred in verifyAdminLoggedIn middleware:', error);
+            res.status(500).send('Internal Server Error');
         }
     },
-    verifyAdminLoggedIn : (req, res, next) => {
-        if(req.session.adminLoggedIn){
-            next()
-        }else{
-            res.redirect('/admin');
-        }
-    },
+    
 
-    ifAdminLoggedIn : (req, res, next) => {
-        if(req.session.adminLoggedIn){
+    ifAdminLoggedIn: (req, res, next) => {
+        try {
+          if (req.session.adminLoggedIn) {
             res.redirect('/admin/adminPanel');
-        }else{
+          } else {
             next();
+          }
+        } catch (error) {
+          // Handle the exception here
+          next(error); // Pass the error to the error handling middleware
         }
-    }
+      }
+      
 }

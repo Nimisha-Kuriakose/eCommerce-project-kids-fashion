@@ -39,6 +39,7 @@ module.exports = {
           if (!findUserExist || userData.email !== findUserExist.email) {
             Object.assign(userData, { status: true });
             userData.password = await bcrypt.hash(userData.password, 10);
+            // delete userDetails.password2;
             db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((status) => {
               if (status) {
                 resolve({ user: userData });
@@ -126,6 +127,55 @@ module.exports = {
             }
         })
     },
+    
+    doLoginWithMobile: (mobile)=> {
+      return new Promise(async (resolve, reject) => {
+          // mobile = Number(mobile);
+
+          let response= {};
+          const user = await db.get().collection(collection.USER_COLLECTION).findOne({phone: mobile});
+          if(user){
+              response.user = user;
+              response.status = true;
+              response.isBlocked = user.isblocked;
+              resolve(response);
+          }else{
+              response.status = false;
+              resolve({status: false})
+          }
+      })
+  }, setNewPassword: (userDetails) => {
+    return new Promise( async (resolve, reject)=> {
+
+        const password = userDetails.password;
+
+        let userPassword = await bcrypt.hash(userDetails.password, 10);
+        db.get().collection(collection.USER_COLLECTION).updateOne({password: password},
+            {
+                $set: {
+                    password: userPassword
+                }
+            }).then((response) => {
+                resolve(response)
+            })
+    })
+},
+
+getUser:(userId)=> {
+
+    return new Promise((resolve, reject) => {
+
+        const user = db.get().collection(collection.USER_COLLECTION).findOne(
+            {
+                _id: new objectId(userId)
+            }
+        )
+        console.log(user);
+        resolve(user);
+    })
+},
+
+
     //Address 
     getAddress:(userId) => {
       return new Promise ( async (resolve, reject) => {
@@ -252,71 +302,130 @@ getOrders:(userId)=> {
   })
 },
 
-addOrderDetails: (order) => {
-  // Object.assign(order, {status: "pending"});
-  return new Promise((resolve, reject) => {
-    db.get().collection(collection.ORDER_COLLECTION).insertOne(order)
-    .then((response)=>{
-      console.log(response);
-      resolve(response);
-    })
-    .catch(()=>{
-      reject();
-    })
-  })
-}, 
+// addOrderDetails: (order) => {
+//   // Object.assign(order, {status: "pending"});
+//   return new Promise((resolve, reject) => {
+//     db.get().collection(collection.ORDER_COLLECTION).insertOne(order)
+//     .then((response)=>{
+//       console.log(response);
+//       resolve(response);
+//     })
+//     .catch(()=>{
+//       reject();
+//     })
+//   })
+// }, 
+addOrderDetails: (order, userId) => {
+  return new Promise(async (resolve, reject) => {
+    if (order.coupon != 'undefined') {
+      const couponCode = order.coupon;
+      const coupon = await db.get().collection(collection.COUPON_COLLECTION).findOne({
+        code: order.coupon
+      });
+      order.coupon = coupon;
+      try {
+        const couponExist = await db.get().collection(collection.USER_COLLECTION).findOne(
+          {
+            _id: new objectId(userId),
+            usedCoupons: { $elemMatch: { couponCode } },
+          },
+        )
+        if (!couponExist) {
+          db.get().collection(collection.USER_COLLECTION).updateOne(
+            {
+              _id: new objectId(userId)
+            },
+            {
+              $push: {
+                usedCoupons: { couponCode }
+              }
+            }
+          )
+        }
+      } catch (err) {
+        console.log(err)
+      } finally {
 
-getOrderedProducts:(ordersId)=>{ 
-  return new Promise(async(resolve, reject)=>{ 
-  ordersId =  new objectId(ordersId); 
-  console.log(ordersId);
-  const orders = await db.get().collection(collection.ORDER_COLLECTION).find({_id: ordersId}).toArray();
-  //                 { 
-  //                   '$match': { 
-  //                     '_id': ordersId 
-  //                   } 
-  //                 }, { 
-  //                   '$unwind': { 
-  //                     'path': '$products', 
-  //                     'includeArrayIndex': 'string',  
-  //                     'preserveNullAndEmptyArrays': true 
-  //                   } 
-  //                 }, { 
-  //                   '$lookup': { 
-  //                     'from': 'product',  
-  //                     'localField': 'product.productId',  
-  //                     'foreignField': '_id',  
-  //                     'as': 'productDetails' 
-  //                   } 
-  //                 }, { 
-  //                   '$project': { 
-  //                     'productDetails': 1,  
-  //                     '_id': 0, 
-  //                     'products.quantity' : 1 
-  //                   } 
-  //                 } 
-  //             ]).toArray(); 
-  // console.log(orders);
-  // console.log(orders[0].productDetails); 
-  console.log(orders);
-  resolve(orders); 
-}); 
+        db.get().collection(collection.ORDER_COLLECTION).insertOne(order)
+          .then(async (response) => {
+            resolve(response);
+            for (let i = 0; i < order.item.length; i++) {
+
+              const stock = await db.get().collection(collection.PRODUCT_COLLECTION).updateOne(
+                {
+                  _id: order.item[i].product._id
+                },
+                {
+                  $inc: {
+                    stock: -order.item[i].quantity
+                  }
+                }
+              )
+            }
+          })
+          .catch((err) => {
+            reject(err);
+          })
+      }
+    } else {
+      delete order.coupon
+
+      db.get().collection(collection.ORDER_COLLECTION).insertOne(order)
+        .then(async (response) => {
+          resolve(response);
+          for (let i = 0; i < order.item.length; i++) {
+            const stock = await db.get().collection(collection.PRODUCT_COLLECTION).updateOne(
+              {
+                _id: order.item[i].product._id
+              },
+              {
+                $inc: {
+                  stock: -order.item[i].quantity
+                }
+              }
+            )
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        })
+    }
+
+  })
+},
+getOrderedProducts: (orderId) => {
+  return new Promise(async (resolve, reject) => {
+      orderId = new objectId(orderId);
+      const order = await db.get().collection(collection.ORDER_COLLECTION).find({ _id: orderId }).toArray();
+      resolve(order);
+  });
+},
+getOrderedProduct: (ordersId) => {
+  return new Promise(async (resolve, reject) => {
+    ordersId = new objectId(ordersId);
+    console.log(ordersId);
+    const orders = await db.get().collection(collection.ORDER_COLLECTION).find({ _id: ordersId }).toArray();
+
+    console.log(orders);
+    resolve(orders);
+  });
 },
 
-cancelOrder:(orderId)=>{
+cancelOrder:(orderId, reason)=>{
   return new Promise((resolve,reject)=>{
     db.get().collection(collection.ORDER_COLLECTION)
     .updateOne({
       _id: new objectId(orderId),
-      // order:{$elemMatch:{id:new objectId(orderId)}}
+      
     },
     {
       $set: {
         "status": "Cancelled",
+        "cancel": reason
         }
     })
     .then((response)=>{resolve(response)})
-  })
+    })
 },
 
 // User Profile
@@ -523,7 +632,7 @@ changeOrderStatus:(orderId) => {
       })
   })
 },
-returnProduct:(orderId) => {
+returnProduct:(orderId,reason) => {
   return new Promise((resolve, reject) => {
       db.get().collection(collection.ORDER_COLLECTION).updateOne(
           {
@@ -531,71 +640,96 @@ returnProduct:(orderId) => {
           },
           {
               $set: {
-                  status: "Return"
+                  status: "Return",
+                  return: reason,
               }
           }
       ).then((response) => {resolve(response)})
   })
-}
+},
+changeOrderPaymentStatus:(orderId) => {
+  return new Promise((resolve, reject) => {
+      db.get().collection(collection.ORDER_COLLECTION).updateOne(
+          {
+              _id: new objectId(orderId)
+          },
+          {
+              $set: {
+                  status: "failed"
+              }
+          }
+      ).then((response) => {
+          resolve(response)
+      }).catch((err) => {
+          
+          console.log(err);
+      })
+  })
+},
+// Coupon
+couponApply:(couponCode, userId)=>{
+  return new Promise(async(resolve, reject)=>{
+      const couponExists = await db.get().collection(collection.USER_COLLECTION)
+      .findOne(
+          {
+              _id: new objectId(userId),
+              usedCoupons: { $elemMatch: { couponCode } }
+          }
+      )
+      const coupon = await db.get().collection(collection.COUPON_COLLECTION).findOne({code: couponCode});
+      if(coupon){
+          if(couponExists){
+              resolve("couponExists");
+          }else{
+              resolve(coupon);
+          }
+      }else{
+          resolve(null);
+      }
+  })
+},
 
 
+getCoupon:()=> {
+  return new Promise(async (resolve, reject)=> {
+     const coupon  = db.get().collection(collection.COUPON_COLLECTION).find().toArray();
+      resolve(coupon);
+  })
+},
 
+
+getSingleorder: (orderId) => {
+  return new Promise((resolve, reject) => {
+      db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: new objectId(orderId) }).then((orderdata) => {
+          resolve(orderdata)
+
+      })
+
+  })
+
+},
+getWallet: (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const wallet = await db.get().collection(collection.WALLET_COLLECTION).findOne({ _id: new objectId(userId) });
+      resolve(wallet);
+    } catch (error) {
+      reject(error);
+    }
+    });
+  },
+getActiveBanner: () => {
+  return new Promise((resolve, reject) => {
+
+    const activeBanner = db.get().collection(collection.BANNER_COLLECTION).findOne(
+      {
+        active: true
+      }
+    )
+    resolve(activeBanner);
+    })
+  },
 
 }    
 
 
-
-// const bcrypt = require('bcrypt');
-// const collection = require('../config/collection');
-// const db = require('../config/connection');
-
-// module.exports = {
-//     doSignUp: (userData) => {
-//         return new Promise(async (resolve, reject) => {
-//             let response = {};
-//           if (!userData || Object.keys(userData).length === 0) {
-//             reject('Request body is missing');
-//           } else if (!userData.password) {
-//             reject('Password is missing') ;
-//           } else {
-//             // Check if the email already exists in the database
-//             const user = await db.get().collection(collection.USER_COLLECTION)
-//               .findOne({ email: userData.email });
-//             if (user) {
-//               reject('Email already exists');
-//             } else {
-//               userData.password = await bcrypt.hash(userData.password, 10);
-//               // response.status = true;
-//               db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((response) => {
-//                   resolve(response.insertedId);
-//                 });
-//             }
-//           }
-//         });
-//       },
-    
-//       doLogin: (userData) => {
-//         return new Promise(async (resolve, reject) => {
-//           let response = {};
-//           let user = await db.get().collection(collection.USER_COLLECTION).findOne({ email: userData.email });
-//           if (user) {
-//             bcrypt.compare(userData.password, user.password).then((status) => {
-//               if (status) {
-//                 console.log("login success");
-//                 response.status = true;
-//                 response.user = user;
-//                 resolve(response);
-//               } else {
-//                 console.log("login failed");
-//                 response.status = false;
-//                 resolve(response);
-//               }
-//             });
-//           } else {
-//             console.log("login failed");
-//             response.status = false;
-//             resolve(response);
-//           }
-//         });
-//       }
-//     }

@@ -5,15 +5,17 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const hbs = require('express-handlebars')
 const session = require('express-session');
-
+const mathHelpers = require('./helpers/mathHelpers');
+const handlebars = require('handlebars')
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
-
+const nocache=require('nocache')
 var app = express();
 //var fileUpload=require('express-fileupload')
 var db=require('./config/connection')
-// view engine setup
 
+
+handlebars.registerHelper(mathHelpers);
 //app.use(fileUpload())
 app.use(session({
   secret: 'your secret key', cookie:{maxAge:600000},// replace with a secret key for secure sessions
@@ -30,8 +32,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
+handlebars.registerHelper('inc', function(value) {
+  return parseInt(value) + 1;
+});
+app.use(nocache())
 db.connect((err)=>{
   if(err) console.log('connection Error'+err)
   else console.log("database connected to port 27017")

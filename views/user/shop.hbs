@@ -1,3 +1,15 @@
+
+<style>
+    #category-link.active {
+  background-color: yellow; /* Change the highlight color as desired */
+
+  .selected{
+
+  }
+
+}
+
+</style>
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
 
@@ -13,11 +25,21 @@
                 <div class="page-breadcrumb">
                     <h5>Category</h5>
                     <div class="page-breadcrumbs">
+                        
                         <ul class="container">
-                            {{#each categories}}
-                            <li><a href="/category/{{this.name}}">{{this.name}}</a></li>
-                            {{/each}}
-                        </ul>
+  {{#each categories}}
+    <li><a id="category-link" href="/category/{{this.name}}" onclick="highlightCategory(event)">{{this.name}}</a></li>
+    
+  {{/each}}
+
+
+ 
+    
+
+
+</ul>
+
+
                     </div>
 
 
@@ -301,4 +323,28 @@
         }
         paginationElement.innerHTML = pageLinks;
     });
+</script>
+<script>
+    var activeLink = null; // variable to store the currently active category link
+
+function highlightCategory(event) {
+  var clickedLink = event.target;
+
+  // If a category link is already active and it's the same as the clicked link, do nothing
+  if (activeLink === clickedLink) {
+    return;
+  }
+
+  // Remove the active class from the previously active link (if there is one)
+  if (activeLink) {
+    activeLink.classList.remove('active');
+  }
+
+  // Add the active class to the clicked category link
+  clickedLink.classList.add('active');
+  activeLink = clickedLink;
+}
+
+
+
 </script>

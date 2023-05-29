@@ -62,32 +62,35 @@ module.exports = {
     },
 
     editProduct: (productId, data) => {
-        return new Promise ((resolve , reject) => {
-            console.log(data)
-            productId = new objectId (productId)
-             db.get().collection(collection.PRODUCT_COLLECTION)
-             .updateOne(
-                {
-                    _id: productId
-                },
-                {
-                    $set: {
-                        name: data.name,
-                        category: data.category,
-                        description: data.description,
-                        price: Number(data.price),
-                        stock: Number(data.stock),
-                    }
+        return new Promise((resolve, reject) => {
+          console.log(data)
+          productId = new objectId(productId)
+          db.get().collection(collection.PRODUCT_COLLECTION)
+            .updateOne(
+              {
+                _id: productId
+              },
+              {
+                $set: {
+                  name: data.name,
+                  productid:data.productid,
+                  category: data.category,
+                  description: data.description,
+                  price: Number(data.price),
+                  slug: slugify(`${data.name} ${data.category}`),
+                  stock: Number(data.stock),
+    
                 }
-             ).then((response) => {
-                console.log(response);
-                resolve()
-             }).catch((err) => {
-                console.log(err);
-                reject();
-             })
-        })
-    },
+              }
+            ).then((response) => {
+              console.log(response);
+              resolve()
+            }).catch((err) => {
+              console.log(err);
+              reject();
+            })
+        })
+      },
 
     deleteProducts: (productId) => {
         return new Promise ((resolve, reject) => {
@@ -302,5 +305,15 @@ module.exports = {
                 reject(err);
             })
         })
-      }
+      },
+    getSomeProducts: () => {
+        return new Promise(async (resolve, reject) => {
+          const someProduct = await db.get().collection(collection.PRODUCT_COLLECTION).find().limit(8).toArray();
+          if (someProduct) {
+            resolve(someProduct)
+          } else {
+            resolve("No data found");
+          }
+        })
+      },
 }
