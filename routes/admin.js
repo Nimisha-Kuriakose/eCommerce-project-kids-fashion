@@ -27,7 +27,7 @@ router.get('/adminBlockUser/:id', adminControllers.adminBlockUser);
 
 //Admin Product
 
-router.get('/adminProduct', verifySession.verifyAdminLoggedIn, adminControllers.adminProduct);
+router.get('/adminproduct', verifySession.verifyAdminLoggedIn, adminControllers.adminProduct);
 
  router.get('/adminAddProduct', verifySession.verifyAdminLoggedIn, adminControllers.adminAddProduct);
 
