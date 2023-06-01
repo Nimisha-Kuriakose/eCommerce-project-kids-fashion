@@ -12,26 +12,7 @@ var instance = new Razorpay({
  })
 module.exports = {
     
-// User Signup & Login
-    // doSignUp: (userData) => {
-    //     return new Promise(async (resolve, reject) => {
-    //         const findUserExist = await db.get().collection(collection.USER_COLLECTION).findOne({email: userData.email});
-    //         if(!findUserExist || userData.email !== findUserExist.email){
-    //             Object.assign(userData, {status: true});
-    //             userData.password = await bcrypt.hash(userData.password, 10);
-    //         db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((response) => {
-    //             console.log(response);
-    //             resolve(response);
-    //         }).catch((err) => {
-    //             console.log(err);
-    //             reject(err);
-    //         })
-    //         }else{
-    //             resolve("Email already exist!!!");
-    //         }
-            
-    //     })
-    // },
+
     
     doSignUp: (userData) => {
         return new Promise(async (resolve, reject) => {
@@ -39,7 +20,7 @@ module.exports = {
           if (!findUserExist || userData.email !== findUserExist.email) {
             Object.assign(userData, { status: true });
             userData.password = await bcrypt.hash(userData.password, 10);
-            // delete userDetails.password2;
+           
             db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((status) => {
               if (status) {
                 resolve({ user: userData });
@@ -49,7 +30,7 @@ module.exports = {
               reject(err);
             });
           } else {
-            console.log("email checked");
+          
             resolve("Email already exists!!!");
           }
         });
@@ -66,7 +47,7 @@ module.exports = {
           response.status = "User Blocked";
           resolve(response);
         }
-        console.log("insidephone");
+       
         response.phone=user.phone
 
         resolve(response)
@@ -119,7 +100,7 @@ module.exports = {
                         resolve(response);
                     }
                 }).catch((err) => {
-                    console.log(err);
+                    
                 });
             } else {
                 response.status = "Invalid User";
@@ -130,7 +111,7 @@ module.exports = {
     
     doLoginWithMobile: (mobile)=> {
       return new Promise(async (resolve, reject) => {
-          // mobile = Number(mobile);
+          
 
           let response= {};
           const user = await db.get().collection(collection.USER_COLLECTION).findOne({phone: mobile});
@@ -170,7 +151,7 @@ getUser:(userId)=> {
                 _id: new objectId(userId)
             }
         )
-        console.log(user);
+        
         resolve(user);
     })
 },
@@ -195,7 +176,7 @@ getUser:(userId)=> {
 
   addAddress: (address, userId) => {
       return new Promise ((resolve , reject) => {
-          // address.active = false;
+          
           address.phone = Number(address.phone);
           address.postCode = Number(address.postCode);
           userId = new objectId(userId);
@@ -247,33 +228,7 @@ getUser:(userId)=> {
       })
   },
 
-  // not used because of bug ;
-  // changeAddressActive: (userId, addressId) => {
-  //     return new Promise ((resolve, reject)=> {
-  //         db.get().collection(collection.USER_COLLECTION)
-  //         .updateMany(
-  //             {
-  //                 _id: new objectId(userId),
-  //             },
-  //             {
-  //                 $set:{"address.$[].active": false}
-  //             }
-  //         );
-  //         db.get().collection(collection.USER_COLLECTION)
-  //         .updateOne(
-  //             {
-  //                 _id:  new objectId(userId),
-  //                 address: {$elemMatch: { _id: new objectId(addressId)}}
-  //             },
-  //             {
-  //                 $set: {"address.$.active": true}
-  //             }
-  //         )
-  //         .then((response)=>{
-  //             resolve(response);
-  //         });
-  //     });
-  // },
+  
 
   findAddress:(addressId, userId)=>{
       return new Promise(async(resolve, reject)=>{
@@ -297,24 +252,12 @@ getOrders:(userId)=> {
               userId: userId
           }
           ).sort({date: -1}).toArray();
-      console.log(orders+"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+     
       resolve(orders);
   })
 },
 
-// addOrderDetails: (order) => {
-//   // Object.assign(order, {status: "pending"});
-//   return new Promise((resolve, reject) => {
-//     db.get().collection(collection.ORDER_COLLECTION).insertOne(order)
-//     .then((response)=>{
-//       console.log(response);
-//       resolve(response);
-//     })
-//     .catch(()=>{
-//       reject();
-//     })
-//   })
-// }, 
+
 addOrderDetails: (order, userId) => {
   return new Promise(async (resolve, reject) => {
     if (order.coupon != 'undefined') {
@@ -343,7 +286,7 @@ addOrderDetails: (order, userId) => {
           )
         }
       } catch (err) {
-        console.log(err)
+        
       } finally {
 
         db.get().collection(collection.ORDER_COLLECTION).insertOne(order)
@@ -403,10 +346,10 @@ getOrderedProducts: (orderId) => {
 getOrderedProduct: (ordersId) => {
   return new Promise(async (resolve, reject) => {
     ordersId = new objectId(ordersId);
-    console.log(ordersId);
+   
     const orders = await db.get().collection(collection.ORDER_COLLECTION).find({ _id: ordersId }).toArray();
 
-    console.log(orders);
+   
     resolve(orders);
   });
 },
@@ -552,7 +495,7 @@ getWishlist: (userId) => {
           ]).toArray();
           resolve(wishlist);
       } catch (err) {
-          console.log(err);
+          
           reject(err);
       }
   })
@@ -586,7 +529,7 @@ generateRazorpay:(orderId, total) => {
           receipt: orderId,
         },(err, order)=> {
       if(err){
-          console.log(err);
+          
           reject(err);
       }else{
           
@@ -628,7 +571,7 @@ changeOrderStatus:(orderId) => {
           resolve(response)
       }).catch((err) => {
           
-          console.log(err);
+         
       })
   })
 },
@@ -662,7 +605,7 @@ changeOrderPaymentStatus:(orderId) => {
           resolve(response)
       }).catch((err) => {
           
-          console.log(err);
+         
       })
   })
 },

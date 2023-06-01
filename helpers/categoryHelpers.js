@@ -40,7 +40,7 @@ module.exports = {
         return new Promise (async (resolve, reject) => {
            const category = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray();
             if(category){
-                console.log(category);
+               
                 resolve(category)
             }else{
                 
@@ -70,7 +70,7 @@ module.exports = {
               
               resolve();
           }).catch((err) => {
-              console.log(err);
+             
               reject();
           })
        })
@@ -100,7 +100,7 @@ module.exports = {
                           }
                         }
                     ]).toArray();
-                // console.log(products[0].productDetails);
+              
                 resolve(products[0].productDetails);
             }catch{
                 resolve(null);

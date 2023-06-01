@@ -17,14 +17,12 @@ module.exports = {
     getProducts:(currentPage) => {
         return new Promise (async (resolve, reject) => {
             currentPage = parseInt(currentPage);
-            console.log('currentPage');
-            console.log(currentPage);
+           
             const limit = 8;
             const skip = (currentPage-1)*limit;
             const productData = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skip).limit(limit).toArray();
             if(productData){
-                console.log("productData");
-                console.log(productData);
+               
                 resolve(productData);
             }else{
                 resolve("No data to show")
@@ -35,12 +33,11 @@ module.exports = {
     getProductsAdmin:(currentPage) => {
         return new Promise (async (resolve, reject) => {
           currentPage = parseInt(currentPage);
-            console.log('currentPage');
-            console.log(currentPage);
+            
             const limit = 8;
             const skip = (currentPage-1)*limit;
             const productData = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skip).limit(limit).toArray();
-            // const productData = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray();
+          
             if(productData){
                 resolve(productData);
             }else{
@@ -56,14 +53,14 @@ module.exports = {
                 {
                     _id: new objectId(productId)
                 });
-                // console.log(productSingleData);
+               
                 resolve(productSingleData);
             })
     },
 
     editProduct: (productId, data) => {
         return new Promise((resolve, reject) => {
-          console.log(data)
+         
           productId = new objectId(productId)
           db.get().collection(collection.PRODUCT_COLLECTION)
             .updateOne(
@@ -86,7 +83,7 @@ module.exports = {
               console.log(response);
               resolve()
             }).catch((err) => {
-              console.log(err);
+             
               reject();
             })
         })
@@ -94,18 +91,18 @@ module.exports = {
 
     deleteProducts: (productId) => {
         return new Promise ((resolve, reject) => {
-            console.log("hoooooooooooooooooooooooooo");
+           
             db.get().collection(collection.PRODUCT_COLLECTION).deleteOne(
                 {
                     _id: new objectId(productId)
                 }
             )
             .then((response) => {
-                console.log(response);
+              
                 resolve()
             })
             .catch((err) => {
-                console.log(err);
+                
                 reject()
             })
         })
@@ -115,7 +112,7 @@ module.exports = {
 //Product Image
     addProductImage:(id, imgUrls)=>{
         return new Promise((resolve, reject)=>{
-            console.log("helpers")
+            
             db.get().collection(collection.PRODUCT_COLLECTION)
             .updateOne(
                 {
@@ -174,10 +171,10 @@ module.exports = {
                     }
                 }
             ).then((response) => {
-                console.log(response);
+                
                 resolve()
             }).catch((err) => {
-                console.log(err);
+               
                 reject()
             })
         })
@@ -190,7 +187,7 @@ module.exports = {
                     listed : true
                 }
             ).toArray();
-            console.log(categories);
+            
             resolve(categories);
         })
     },
@@ -240,14 +237,13 @@ module.exports = {
       },
 
       sortPrice:(detailes, category) => {
-        console.log("details")
-          console.log(detailes)
+       
           return new Promise (async (resolve, reject) => {
           try{
               const minPrice = Number(detailes.minPrice);
               const maxPrice = Number(detailes.maxPrice);
               const value = detailes.sort;
-              console.log('value'+value)
+              
               let product;
       
               if(category){
@@ -284,10 +280,10 @@ module.exports = {
                   }).sort({price: value}).toArray();
               }
               resolve(product);
-              console.log(product)
+           
                
           }catch{
-              console.log("Error");
+              
           }
               
           });
@@ -316,4 +312,16 @@ module.exports = {
           }
         })
       },
+    getRelatedProducts: (category) => {
+      return new Promise(async (resolve, reject) => {
+        const getRelatedProduct = await db.get().collection(collection.PRODUCT_COLLECTION).find({
+          category: category
+        }).limit(4).toArray();
+        if (getRelatedProduct) {
+          resolve(getRelatedProduct)
+        } else {
+          resolve("No data Found");
+        }
+      })
+    },
 }

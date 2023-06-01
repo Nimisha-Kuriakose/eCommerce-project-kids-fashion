@@ -61,7 +61,7 @@ module.exports = {
         const placedCounts = await adminHelpers.getAllPlacedOrdersCount();
         const cancelledCounts = await adminHelpers.getAllCanceldOrdersCount();
         const returnCounts = await adminHelpers.getAllReturnOrdersCount();
-        // const topProducts = await adminHelpers.getTopProduct();
+       
         res.render('admin/adminpanel', {admin: true, adminName: req.session.adminName, deliveredCounts , placedCounts, cancelledCounts, returnCounts, userCount, totalOrdersPlaced, total, totalEarnings, jan,feb,mar,apr,may,jun});
     },
 
@@ -108,11 +108,10 @@ adminDeleteUser: (req, res) => {
 },
 adminBlockUser: (req, res) => {
     const userId = req.params.id;
-    console.log(userId);
-    adminHelpers.blockUser(userId).then(() => {
+       adminHelpers.blockUser(userId).then(() => {
         res.redirect('/admin/adminusers')
     }).catch((err) => {
-        console.log(err);
+      
     })
 },
 //Admin Product CRUD
@@ -128,7 +127,7 @@ adminProduct: async (req, res) => {
 adminAddProduct: (req, res) => {
     const adminName = req.session.adminName;
     categoryHelpers.getCategory().then((category) => {
-        console.log(category);
+      
         res.render('admin/adminAddProduct', {admin: true, adminName, category});
     });
     
@@ -150,10 +149,10 @@ adminAddProductPost: (req, res) => {
                 const result = await cloudinary.uploader.upload(req.files[i].path);
                 imgUrls.push(result.url);
             }
-            console.log(imgUrls)
+            
             productHelpers.addProductImage(id, imgUrls).then(()=>{}).catch(()=>{});
         }catch(err){
-            console.log(`error : ${err}`);
+            
         }finally{
             res.redirect('/admin/adminAddProduct');
         }
@@ -162,7 +161,7 @@ adminAddProductPost: (req, res) => {
 
 adminEditProduct: (req, res) => {
         const productId = req.params.id;
-        console.log(productId);
+       
         productHelpers.editProduct(productId, req.body).then(async()=>{
             const imgUrls = [];
             try{
@@ -175,7 +174,7 @@ adminEditProduct: (req, res) => {
                         productHelpers.editProductImage(productId, imgUrls).then(()=>{}).catch(()=>{});
                     }
             }catch(err){
-                console.log(`error : ${err}`);
+               
             }finally{
                 res.redirect('/admin/adminProduct');
             }
@@ -219,7 +218,7 @@ addCategory: (req, res) => {
 deleteCategory: (req, res) => {
     const category = req.params.id;
     const cateName = req.params.name;
-    console.log(category);
+   
     categoryHelpers.deleteCategory(category, cateName).then(() => {
 
         res.redirect('/admin/adminCategory');
@@ -232,8 +231,7 @@ deleteCategory: (req, res) => {
 adminOrder: (req, res) => {
     const adminName = req.session.adminName;
     adminHelpers.getUserOrder().then((adminOrder)=>{
-        // console.log("api call");
-        console.log(adminOrder);
+        
         res.render('admin/adminOrder', {admin: true, adminName, adminOrder});
     })
 },
@@ -248,7 +246,7 @@ adminOrderStatus: (req, res) => {
             res.redirect("back");
         })
         .catch((error) => {
-            console.log("Error:", error);
+           
             res.redirect("back");
         });
     },
@@ -349,9 +347,7 @@ adminCoupon: async (req, res)=> {
  adminRefund:async(req, res)=> {
     const orderId = req.params.id;
     const userId = await adminHelpers.getSingle(orderId);
-    console.log('userId')
-    console.log(userId)
-    console.log('req.body.order.userId')
+   
     adminHelpers.adminRefund(orderId,userId).then(()=>{
         res.redirect('back');
        })
@@ -375,7 +371,7 @@ adminAddBanner: async (req, res)=> {
         req.body.image = image.url;
 
     }catch (err){
-        console.log(err);
+       
     }
     
     adminHelpers.addBanner(req.body).then(()=> {
@@ -389,7 +385,7 @@ adminEditBanner: async(req, res)=> {
     const image = await cloudinary.uploader.upload(req.file.path);
     adminHelpers.adminBannerImageEdit(bannerId, image.url);
     }catch (err){
-        console.log(err);
+       
     }
     adminHelpers.adminEditBanner(bannerId, req.body).then(()=> {
         res.redirect('/admin/adminBanner');

@@ -7,7 +7,7 @@ const verifySession = require('../middleware/verifySession');
 
 router.get('/',userControllers.userHome)
 router.get('/login', userControllers.userLogin);
-router.post('/login', userControllers.userLoginPost);
+router.post('/Home', userControllers.userLoginPost);
 router.get('/signup',verifySession.ifUserLoggedIn, userControllers.usersignup);
 router.post('/signUp',userControllers.signUpPost);
 router.get('/logout',verifySession.verifyUserLoggedIn, userControllers.logout);

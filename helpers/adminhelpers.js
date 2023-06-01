@@ -30,7 +30,7 @@ module.exports = {
         return new Promise ( async (resolve, reject) => {
             const userData = await db.get().collection(collection.USER_COLLECTION).find().toArray();
             resolve(userData);
-            // reject("No user Found")
+            
         })
     },
 
@@ -49,10 +49,10 @@ module.exports = {
                     }
                 }
             ).then((response) => {
-                console.log(response);
+               
                 resolve();
             }).catch((err) => {
-                console.log(err);
+                
                 reject();
             })
         })
@@ -66,10 +66,10 @@ module.exports = {
                     _id: new objectId(userId)
                 }
             ).then((response) => {
-                console.log(response);
+                
                 resolve();
             }).catch((err) => {
-                console.log(err);
+                
                 reject();
             })
         })
@@ -84,7 +84,7 @@ module.exports = {
                     _id: new objectId(userId)
                 }
             )
-            console.log(user);
+            
             if(user.status == true){
                 db.get().collection(collection.USER_COLLECTION).updateOne(
                     {
@@ -121,7 +121,7 @@ module.exports = {
     getUserOrder:() => {
         return new Promise(async(resolve, reject) => {
             const userDet = await db.get().collection(collection.ORDER_COLLECTION).find().toArray();
-            // console.log('usersdefdinv', userDet);
+            
             resolve(userDet);
         });
     },
@@ -131,7 +131,7 @@ module.exports = {
             .findOne({ _id: new objectId(orderId) })
             .then((order) => {
               if (order.status === "Cancelled") {
-                console.log("User has already cancelled the product");
+                
                 reject("User has already cancelled the product");
               } else {
                 db.get().collection(collection.ORDER_COLLECTION)
@@ -144,17 +144,17 @@ module.exports = {
                     }
                   )
                   .then((response) => {
-                    console.log("Status updated successfully");
+                   
                     resolve(response);
                   })
                   .catch((error) => {
-                    console.log("Error updating status:", error);
+                   
                     reject(error);
                   });
               }
             })
             .catch((error) => {
-              console.log("Error finding order:", error);
+              
               reject(error);
             });
         });
@@ -244,20 +244,7 @@ getMonthCount: (month, year) => {
         const startDate = new Date(year, month - 1, 1); //Month Index starts from 0
         const endDate = new Date(year, month, 0); 
   
-        // const total = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-        //   {
-        //     $match: {
-        //       status: "Delivered",
-        //       date: { $gte: startDate, $lte: endDate }
-        //     }
-        //   },
-        //   {
-        //     $group: {
-        //       _id: null,
-        //       total: { $sum: { $toDouble: "$total" } }
-        //     }
-        //   }
-        // ]).toArray();
+        
         const count = await db.get().collection(collection.ORDER_COLLECTION)
         .countDocuments({
           status: "Delivered",
@@ -497,8 +484,7 @@ getAllReturnOrdersCount:()=> {
             .then((orderData) => {
               if (orderData) {
                 const userId = orderData.userId;
-                console.log('userId')
-                console.log(userId)
+                
                 // Add the userId property to the orderData object
                 orderData.userId = userId;
                 resolve(userId);
