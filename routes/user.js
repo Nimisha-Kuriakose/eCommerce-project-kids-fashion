@@ -11,7 +11,7 @@ router.post('/Home', userControllers.userLoginPost);
 router.get('/signup',verifySession.ifUserLoggedIn, userControllers.usersignup);
 router.post('/signUp',userControllers.signUpPost);
 router.get('/logout',verifySession.verifyUserLoggedIn, userControllers.logout);
-
+ 
 // otp
 router.get('/otpverification',verifySession.ifUserLoggedIn, userControllers.otpPageRender);
 router.get('/resend',verifySession.ifUserLoggedIn, userControllers.otpresend);
