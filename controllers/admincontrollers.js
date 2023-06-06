@@ -128,7 +128,7 @@ adminAddProduct: (req, res) => {
     const adminName = req.session.adminName;
     categoryHelpers.getCategory().then((category) => {
       
-        res.render('admin/adminAddProduct', {admin: true, adminName, category});
+        res.render('admin/adminAddproduct', {admin: true, adminName, category});
     });
     
     
@@ -154,7 +154,7 @@ adminAddProductPost: (req, res) => {
         }catch(err){
             
         }finally{
-            res.redirect('/admin/adminAddProduct');
+            res.redirect('/admin/adminAddproduct');
         }
     });
 },

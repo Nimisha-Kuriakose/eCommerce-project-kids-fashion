@@ -29,9 +29,9 @@ router.get('/adminBlockUser/:id', adminControllers.adminBlockUser);
 
 router.get('/adminproduct', verifySession.verifyAdminLoggedIn, adminControllers.adminProduct);
 
- router.get('/adminAddProduct', verifySession.verifyAdminLoggedIn, adminControllers.adminAddProduct);
+ router.get('/adminAddproduct', verifySession.verifyAdminLoggedIn, adminControllers.adminAddProduct);
 
- router.post('/adminAddProduct',upload.array('image'), adminControllers.adminAddProductPost);
+ router.post('/adminAddproduct',upload.array('image'), adminControllers.adminAddProductPost);
 
  router.post('/adminEditProduct/:id',upload.array('image'), adminControllers.adminEditProduct);
 
