@@ -1,4 +1,4 @@
-const adminHelpers = require('../helpers/adminHelpers');
+const adminHelpers = require('../helpers/adminhelpers');
 const productHelpers = require('../helpers/productHelpers');
 const userHelpers = require('../helpers/userhelpers');
 const categoryHelpers = require('../helpers/categoryHelpers');
