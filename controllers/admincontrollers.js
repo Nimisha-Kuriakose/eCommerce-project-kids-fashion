@@ -122,7 +122,7 @@ adminProduct: async (req, res) => {
     const totalPages = await productHelpers.totalPages();
     const currentPage = req.query.page || 1;
     const productData = await productHelpers.getProductsAdmin(currentPage);
-    res.render('admin/adminProduct', { admin: true, adminName, productData ,totalPages,currentPage});
+    res.render('admin/adminproduct', { admin: true, adminName, productData ,totalPages,currentPage});
     },
 adminAddProduct: (req, res) => {
     const adminName = req.session.adminName;
@@ -138,7 +138,7 @@ adminSearchProduct: async (req, res) => {
 
     const product = await adminHelpers.adminSearchProduct(req.body.name);
 
-    res.render('admin/adminProduct', { admin: true, adminName, product })
+    res.render('admin/adminproduct', { admin: true, adminName, product })
     },
 
 adminAddProductPost: (req, res) => {
@@ -176,7 +176,7 @@ adminEditProduct: (req, res) => {
             }catch(err){
                
             }finally{
-                res.redirect('/admin/adminProduct');
+                res.redirect('/admin/adminproduct');
             }
         })
 },
