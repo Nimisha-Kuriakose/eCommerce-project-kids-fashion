@@ -212,8 +212,8 @@ addCategory: (req, res) => {
         });
     } catch (error) {
         res.redirect('back');
-        }
-    },
+    }
+},
 
 deleteCategory: (req, res) => {
     const category = req.params.id;
