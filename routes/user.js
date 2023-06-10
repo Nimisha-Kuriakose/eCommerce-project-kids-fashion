@@ -18,9 +18,9 @@ router.get('/resend',verifySession.ifUserLoggedIn, userControllers.otpresend);
 router.post('/smssend', userControllers.usersignup);
 router.post('/otpverification', userControllers.otpVerification);
 // user cart
-router.get('/cart/',verifySession.verifyUserLoggedIn, userControllers.cart);
+router.get('/cart/',userControllers.userStatus,verifySession.verifyUserLoggedIn, userControllers.cart);
 router.post('/change-product-quantity', verifySession.verifyUserLoggedIn, userControllers.changeProductQuantity);
-router.get('/addToCart/:id', verifySession.verifyUserLoggedIn, userControllers.cartPage);
+router.get('/addToCart/:id',userControllers.userStatus, verifySession.verifyUserLoggedIn, userControllers.cartPage);
 router.get('/deleteCart/:id', verifySession.verifyUserLoggedIn, userControllers.deleteCart);
 //forgot password
 router.get('/forgotPass',userControllers.forgotPass)
@@ -34,11 +34,11 @@ router.post('/forgotPassOtpVerificaion',verifySession.ifUserLoggedIn,userControl
 
 
 // User Panel
- router.get('/shop',verifySession.verifyUserLoggedIn, userControllers.shopPage);
+ router.get('/shop',userControllers.userStatus,verifySession.verifyUserLoggedIn, userControllers.shopPage);
 
-router.get('/product/:id',verifySession.verifyUserLoggedIn, userControllers.productPage);
+router.get('/product/:id',userControllers.userStatus,verifySession.verifyUserLoggedIn, userControllers.productPage);
 
-router.get('/checkOut',verifySession.verifyUserLoggedIn, userControllers.checkOutPage);
+router.get('/checkOut',userControllers.userStatus,verifySession.verifyUserLoggedIn, userControllers.checkOutPage);
 
 router.post('/checkOutPost', verifySession.verifyUserLoggedIn, userControllers.checkOutPost);
 
@@ -50,7 +50,7 @@ router.post('/placeOrder', verifySession.verifyUserLoggedIn, userControllers.pla
 router.post('/verifyPayment', verifySession.verifyUserLoggedIn, userControllers.verifyPayment);
 
 //Category
-router.get('/category/:name', verifySession.verifyUserLoggedIn, userControllers.categoryFilter);
+router.get('/category/:name',userControllers.userStatus, verifySession.verifyUserLoggedIn, userControllers.categoryFilter);
 
 // User Orders
 router.get('/orders', verifySession.verifyUserLoggedIn, userControllers.orders);
