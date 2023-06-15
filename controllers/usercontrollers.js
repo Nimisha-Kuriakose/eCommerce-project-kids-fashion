@@ -457,7 +457,6 @@ module.exports = {
     res.redirect('back');
   },
   placeOrder: async (req, res) => {
-    // console.log(req.body+"asasasasasasasasasasasas")
     try {
       const addressId = req.body.address;
       const userDetails = req.session.user;
@@ -467,8 +466,8 @@ module.exports = {
       const cartItems = await cartHelpers.getCart(req.session.user._id);
       const now = new Date();
       const status = req.body.paymentMethod === "COD" ? "placed" : "pending";
-
-      //Order collection
+  
+      // Order collection
       const order = {
         userId: new objectId(req.session.user._id),
         userName: req.session.userName,
@@ -477,88 +476,81 @@ module.exports = {
         total: total,
         paymentMethod: paymentMethod,
         products: cartItems,
-        date: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
+        date: now,
         status,
         coupon: req.body.coupon,
       };
-
+  
       const userId = req.session.user._id;
-      userHelpers.addOrderDetails(order, userId)
-        .then((order) => {
-          cartHelpers.deleteCartFull(req.session.user._id);
-
-          if (req.body.paymentMethod === "COD") {
+      userHelpers.addOrderDetails(order, userId).then((order) => {
+        cartHelpers.deleteCartFull(req.session.user._id);
+  
+        if (req.body.paymentMethod === "COD") {
+          res.json({
+            status: true,
+            paymentMethod: req.body.paymentMethod,
+          });
+  
+        } else if (req.body.paymentMethod === "card") {
+          const orderId = order.insertedId;
+          userHelpers.generateRazorpay(orderId, total).then((response) => {
             res.json({
-              status: true,
-              paymentMethod: req.body.paymentMethod,
+              response: response,
+              paymentMethod: "card",
+              userDetails: userDetails,
             });
-
-          } else if (req.body.paymentMethod === "card") {
-
-            const orderId = order.insertedId;
-
-            userHelpers.generateRazorpay(orderId, total).then((response) => {
-              res.json({
-                response: response,
-                paymentMethod: "card",
-                userDetails: userDetails,
-              });
-            });
-          } else {
-
-            const exchangeRate = 0.013;
-            const totalCost = (Number(req.body.total) * exchangeRate).toFixed(0);
-            const create_payment_json = {
-              intent: "sale",
-              payer: {
-                payment_method: "paypal",
-              },
-              redirect_urls: {
-                return_url: "http://localhost:3000/success",
-                cancel_url: "http://localhost:3000/cancel",
-              },
-              transactions: [
-                {
-                  amount: {
-                    currency: "USD",
-                    total: `${totalCost}`,
-                  },
-                  description: "Marvelous Ware SHOPPING PLATFORM PAYPAL PAYMENT",
+          });
+        } else {
+          const exchangeRate = 0.013;
+          const totalCost = (Number(req.body.total) * exchangeRate).toFixed(0);
+          const create_payment_json = {
+            intent: "sale",
+            payer: {
+              payment_method: "paypal",
+            },
+            redirect_urls: {
+              return_url: "http://localhost:3000/success",
+              cancel_url: "http://localhost:3000/cancel",
+            },
+            transactions: [
+              {
+                amount: {
+                  currency: "USD",
+                  total: `${totalCost}`,
                 },
-              ],
-            };
-
-            paypal.payment.create(create_payment_json, function (error, payment) {
-              if (error) {
-                
-                res.render('user/failure', { user: true, userName: req.session.userName });
-
-              } else if (payment) {
-                try {
-                  req.session.orderId = order.insertedId;
-                  userHelpers.changeOrderStatus(order.insertedId).then(() => { console.log("changed") }).catch(() => { });
-                  
-                } catch (err) {
-                  
-                } finally {
-                  for (let i = 0; i < payment.links.length; i++) {
-                    if (payment.links[i].rel === "approval_url") {
-                      res.json({
-                        approval_link: payment.links[i].href,
-                        status: "success"
-                      })
-                    }
+                description: "Marvelous Ware SHOPPING PLATFORM PAYPAL PAYMENT",
+              },
+            ],
+          };
+  
+          paypal.payment.create(create_payment_json, function (error, payment) {
+            if (error) {
+              res.render('user/failure', { user: true, userName: req.session.userName });
+            } else if (payment) {
+              try {
+                req.session.orderId = order.insertedId;
+                userHelpers.changeOrderStatus(order.insertedId).then(() => { console.log("changed") }).catch(() => { });
+              } catch (err) {
+                // Handle error
+              } finally {
+                for (let i = 0; i < payment.links.length; i++) {
+                  if (payment.links[i].rel === "approval_url") {
+                    res.json({
+                      approval_link: payment.links[i].href,
+                      status: "success"
+                    });
                   }
                 }
               }
-            });
-          }
-        });
+            }
+          });
+        }
+      });
     } catch (err) {
-     
+      // Handle error
     }
   },
-
+  
   
 
   editAddressPost: (req, res) => {

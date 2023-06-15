@@ -64,7 +64,7 @@ module.exports = {
                     .get()
                     .collection(collection.ORDER_COLLECTION)
                     .find()
-                    .sort({ _id: -1 }) // Sort by _id in descending order
+                    .sort({ date: -1 })  // Sort by _id in descending order
                     .toArray();
                 resolve(userDet);
             } catch (error) {
