@@ -36,6 +36,7 @@ router.get('/adminproduct', verifySession.verifyAdminLoggedIn, adminControllers.
  router.post('/adminEditProduct/:id',upload.array('image'), adminControllers.adminEditProduct);
 
 router.get('/adminDeleteProduct/:id', adminControllers.adminDeleteProduct);
+router.get('/viewProducts/:id', verifySession.verifyAdminLoggedIn, adminControllers.viewDetadmin);
 
 
 //Admin Categorey

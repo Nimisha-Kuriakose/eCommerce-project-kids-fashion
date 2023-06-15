@@ -74,7 +74,7 @@ module.exports = {
                   category: data.category,
                   description: data.description,
                   price: Number(data.price),
-                  slug: slugify(`${data.name} ${data.category}`),
+                  //slug: slugify(`${data.name} ${data.category}`),
                   stock: Number(data.stock),
     
                 }

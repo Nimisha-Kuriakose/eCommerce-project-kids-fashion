@@ -830,25 +830,31 @@ module.exports = {
     }
   },
   userStatus: async (req, res, next) => {
-    const id = req.session.user._id;
-    const userProfile = await userHelpers.getUser(id).then((response) => {
-      if (response.status == "No user Found") {
-        res.render("user/signup", {
-          user: true,
-          errMsg: response.status,
-        });
-      } else if (response.status == false) {
-        req.session.userLoggedIn = false;
-        req.session.userName = false;
-        res.render("user/login", {
-          user: true,
-          errMsg: "User Blocked",
-        });
-      } else {
-        next();
-      }
-
-    });
+    if (req.session.user && req.session.user._id) {
+      const id = req.session.user._id;
+      const userProfile = await userHelpers.getUser(id).then((response) => {
+        if (response.status == "No user Found") {
+          res.render("user/signup", {
+            user: true,
+            errMsg: response.status,
+          });
+        } else if (response.status == false) {
+          req.session.userLoggedIn = false;
+          req.session.userName = false;
+          res.render("user/login", {
+            user: true,
+            errMsg: "User Blocked",
+          });
+        } else {
+          next();
+        }
+      });
+    } else {
+      res.render("user/login", {
+        user: true,
+        errMsg: "User not logged in",
+      });
+    }
   },
-
+  
 }

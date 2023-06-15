@@ -658,9 +658,10 @@ getWallet: (userId) => {
       resolve(wallet);
     } catch (error) {
       reject(error);
-    }
-    });
-  },
+    }
+  });
+},
+
 getActiveBanner: () => {
   return new Promise((resolve, reject) => {
 

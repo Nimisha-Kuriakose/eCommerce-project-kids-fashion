@@ -1,4 +1,3 @@
-
 <style>
     #category-link.active {
   background-color: yellow; /* Change the highlight color as desired */
@@ -6,57 +5,70 @@
   .selected{
 
   }
+  a {
+    text-decoration: none !important;
+  }
+ 
+ 
 
+  
 }
 
 </style>
-<link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
 
-<section class="page-add">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="page-breadcrumb">
-                    <h2>Products<span>.</span></h2>
-                    <a href="/">Home</a>
-                    <a href="/shop" class="active">Products</a>
-                </div>
-                <div class="page-breadcrumb">
-                    <h5>Category</h5>
-                    <div class="page-breadcrumbs">
-                        
-                        <ul class="container">
-  {{#each categories}}
-    <li><a id="category-link" href="/category/{{this.name}}" onclick="highlightCategory(event)">{{this.name}}</a></li>
-    
-  {{/each}}
+{{!-- <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" /> --}}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
- 
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Category
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
     
 
-
-</ul>
-
-
-                    </div>
+ {{#each categories}}
+  <li><a id="category-link" class="nav-link" href="/category/{{this.name}}"  onclick="highlightCategory(event)">{{this.name}}</a></li>
+{{/each}}
 
 
-                </div>
-            </div>
-            <div class="col-lg-8">
-                <a href="/shop">
-                    <img src="https://img.freepik.com/free-vector/hand-drawn-kids-toys-sale-banner_23-2149651210.jpg" alt=""
-                        width="1100" height="400">
-                </a>
-            </div>
+  </ul>
+  
+</div>
+{{!-- <div class="cf-left col-md-12">
+  <select class="sort" onchange="sortPrice(this.value)">
+    <option value="">Sort by</option>
+    <option value="1">Low to High</option>
+    <option value="-1">High to Low</option>
+  </select>
+</div> --}}
 
-        </div>
-    </div>
-</section>
-<!-- Page Add Section End -->
 
+
+{{!-- <div class="cf-left col-md-12">
+                            <select class="sort" onchange="sortPrice(this.value)">
+                                <option value="">Sort by</option>
+                                <option value="1">Low to High</option>
+                                <option value="-1">High to Low</option>
+                            </select>
+                        </div> --}}
+
+    <form action="/user/userSearchProduct" method="post">
+                        <div style="padding-left: 494px;" class="input-group col-*">
+                            <input type="search" name="name" class="form-control form-control-sm" placeholder="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+  </div>
+</nav>
 
 
 {{!-- pagination --}}
@@ -72,12 +84,12 @@
                
                 <div class="col-lg-3">
                     <div class="categories-filter">
-                        <div class="col-md-12">
+                        {{!-- <div class="col-md-12">
                             <label for="range">Price range:</label>
                             <div class="range-slider">
                                 <input type="text" id="range" class="js-range-slider" value="" />
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-6">
                             <div class="extra-controls mb-4">
@@ -89,16 +101,16 @@
                                 <input hidden type="number" class="form-control" id="selectMaxPrice" name="maxPrice"
                                     value="{{maxPrice}}" />
 
-                                <div class="text-center">
+                                {{!-- <div class="text-center">
                                     <button class="btn btn-dark" onclick="applyFilter()">Apply</button>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                         <div class="cf-left mt-3">
                             {{!-- <select class="sort"> --}}
                                 {{!-- <option value="">Sort by</option> --}}
-                                <a href="" class="btn btn-dark" onclick="sortPrice(1)">Low to High</a>
-                                <a href="" class="btn btn-dark" onclick="sortPrice(-1)">High to Low</a>
+                                {{!-- <a href="" class="btn btn-dark" onclick="sortPrice(1)">Low to High</a>
+                                <a href="" class="btn btn-dark" onclick="sortPrice(-1)">High to Low</a> --}}
 
 
                         </div>
@@ -107,7 +119,7 @@
                 </div>
                 <div class="main">
                     <!-- Another variation with a button -->
-                    <form action="/user/userSearchProduct" method="post">
+                    {{!-- <form action="/user/userSearchProduct" method="post">
                         <div style="padding-left: 494px;" class="input-group col-*">
                             <input type="search" name="name" class="form-control form-control-sm" placeholder="Search">
                             <div class="input-group-append">
@@ -116,7 +128,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form> --}}
                 </div>
             </div>
         </div>
@@ -302,6 +314,8 @@
 </script>
 
 
+
+
 {{!-- Pagination --}}
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -344,7 +358,23 @@ function highlightCategory(event) {
   clickedLink.classList.add('active');
   activeLink = clickedLink;
 }
+<script>
+  function highlightLink(event) {
+    // Remove active class from previously clicked link
+    const activeLink = document.querySelector('.nav-link.active');
+    if (activeLink) {
+      activeLink.classList.remove('active');
+    }
 
+    // Add active class to the clicked link
+    event.target.classList.add('active');
+  }
+</script>
 
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

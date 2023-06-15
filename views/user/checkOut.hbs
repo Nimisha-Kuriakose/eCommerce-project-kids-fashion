@@ -189,9 +189,12 @@
                 <div class="text-success">
                   <h6 class="my-0">Coupon</h6>
                   <small id="couponName"></small>
+                 
                 </div>
+           
                 <span class="text-success" id="couponPrice">Rs.0</span>
               </div>
+             
               <div class="cart-total">
                 <span>Amount Payable</span>
                 <p id="strong">{{total}}</p>
@@ -200,8 +203,10 @@
             </div>
 
           </div>
-      </div>
+          
 
+      </div>
+<a href="/checkOut"><button type="button" class="btn btn-primary">clear coupon</button></a>
        
       <div class="header-info">
         <div class="row">
@@ -530,6 +535,7 @@
         const coupon = response.data.coupon;
         if (coupon.status == 'Deactivated' || coupon.status == 'Expired') {
           document.getElementById('invalidCoupon').innerHTML = "Coupon has been expired!"
+          
         } else if (totalCost <= 1000) {
           document.getElementById('invalidCoupon').innerHTML = "Purchase for atleast 1000 to apply Coupon!"
         } else {
@@ -645,5 +651,17 @@
       console.error(error);
     })
   };
+
+</script>
+<script>
+  function clearCoupon() {
+  // Clear the coupon code or perform any other necessary actions
+  // For example:
+  document.getElementById("couponCodeInput").value = "";
+  // Additional logic for clearing the coupon can be added here
+
+  // Refresh the page
+  location.reload();
+}
 
 </script>

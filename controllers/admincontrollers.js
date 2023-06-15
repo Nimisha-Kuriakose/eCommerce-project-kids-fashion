@@ -31,7 +31,7 @@ module.exports = {
                     req.session.admin = response.admin;
                     req.session.adminName = req.session.admin.email;
                     req.session.adminLoggedIn = true;
-                    res.render('admin/adminpanel', {admin: true, adminName: req.session.adminName});
+                    res.redirect('/admin/adminpanel')
                 }
             })
         },
@@ -405,6 +405,31 @@ adminOrderView: async (req, res)=> {
     res.render('admin/adminOrderView', {admin: true, adminName: req.session.adminName, order})
     },
 
+viewDetadmin: async (req, res) => {
+        
+    const adminName = req.session.adminName;
+    const orderId = req.params.id;
 
+    adminHelpers.getOrderedProducts(orderId).then((orders) => {
+        console.log("orders");
+        console.log(orders);
+
+        if (req.session.admin) {
+            res.render("admin/viewDetadmin", {
+                admin: true,
+                adminName,
+                orders,
+
+            });
+        } else {
+            res.render("user/viewDetadmin", {
+                admin: false,
+                adminName,
+                orders,
+
+            });
+        }
+      });
+    },
     
     }
