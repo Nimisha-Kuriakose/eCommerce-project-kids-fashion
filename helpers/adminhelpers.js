@@ -59,20 +59,28 @@ module.exports = {
 
     getUserOrder: () => {
         return new Promise(async (resolve, reject) => {
-            try {
-                const userDet = await db
-                    .get()
-                    .collection(collection.ORDER_COLLECTION)
-                    .find()
-                    .sort({ date: -1 })  // Sort by _id in descending order
-                    .toArray();
-                resolve(userDet);
-            } catch (error) {
-                reject(error);
-            }
+          try {
+            const userDet = await db
+              .get()
+              .collection(collection.ORDER_COLLECTION)
+              .aggregate([
+                {
+                  $addFields: {
+                    time: { $toDate: "$date" } // Convert the date field to a date object
+                  }
+                },
+                {
+                  $sort: { time: -1 } // Sort by the time field in ascending order
+                }
+              ])
+              .toArra
+            resolve(userDet);
+          } catch (error) {
+            reject(error);
+          }
         });
-    },
-
+      },
+      
 
 
     adminOrderStatus: (orderId, status) => {

@@ -1,3 +1,21 @@
+<style>
+    .cart-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.cart-page {
+  width: 400px;
+  height: 400px;
+  margin-bottom: 13rem;
+  overflow-x: auto;
+}
+
+</style>
+
+
 <section class="page-add cart-page-add">
     <div class="container">
         <div class="row">
@@ -15,16 +33,16 @@
         </div>
     </div>
 </section>
-<div class="cart-page" style="margin-bottom: 13rem; overflow-x: auto;">
-    <div class="container">
+<div class="cart-page-container" style="margin-bottom: 13rem; overflow-x: auto;">
+    <div class="cart-page">
         <div class="cart-table">
             <table class="table-hover table-striped tm-table-striped-even mb-5 text-center" id="productsTable">
                 <thead>
                     <tr class="tm-bg-gray">
                        
-                        <th>Balance</th>
+                        {{!-- <th>Balance</th>
                         
-                        <th>Morer Info</th>
+                        <th>Morer Info</th> --}}
                     </tr>
                 </thead>
               
@@ -33,7 +51,9 @@
                     <tr>
                           
                             <td class="tm-product-name" style="font-weight: bold;">{{wallet.balance}}</td>
-                        <td class="btn btn-dark" data-toggle="modal" data-target="#moreDetailes{{_id}}" style="padding-top: 0.5rem;">Last Transaction</td>
+                            <td class="tm-product-name" style="font-weight: bold;">My Wallet Balance</td>
+                       
+
                           
                     </tr>
           

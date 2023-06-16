@@ -583,7 +583,6 @@ module.exports = {
     });
     res.render("user/orders", { user: true, userName, orders });
   },
-
   cancelOrder: (req, res) => {
     console.log("inside one cance;l")
     const orderId = req.params.id;
@@ -629,6 +628,7 @@ module.exports = {
       res.redirect('/shop');
     }
   },
+ 
 
 
   // User Profile
@@ -741,12 +741,17 @@ module.exports = {
     });
   },
   userSearchProduct: async (req, res) => {
-    const userName = req.session.userName;
-    
-    const product = await productHelpers.userSearchProduct(req.body.name);
-    
+  const userName = req.session.userName;
+  const searchName = req.body.name;
+
+  try {
+    const product = await productHelpers.userSearchProduct(searchName);
+
     res.render("user/shop", { user: true, userName, product });
-  },
+  } catch (err) {
+    // Handle error
+  }
+},
 
   // Paypal
   paypalSuccess: (req, res) => {
